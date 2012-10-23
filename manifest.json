@@ -9,7 +9,7 @@
     "content_scripts": [
         {
             "matches": ["http://*.roll20.net/*", "https://plus.google.com/hangouts/*"],
-            "js": ["js/lib/jQuery/jQuery-1.8.2.js"]
+            "js": ["js/lib/jquery/jquery.min.js"]
         }
     ],
     "permissions": [
