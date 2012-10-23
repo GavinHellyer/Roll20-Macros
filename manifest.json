@@ -1,0 +1,24 @@
+{
+    "name": "Roll20 Macros",
+    "version": "1.0",
+    "manifest_version": 2,
+    "description": "Chrome extension for Roll20 Macros.",
+    "browser_action": {
+        "default_icon": "img/icon.png"
+    },
+    "content_scripts": [
+        {
+            "matches": ["http://*.roll20.net/*", "https://plus.google.com/hangouts/*"],
+            "js": ["js/lib/jQuery/jQuery-1.8.2.js"]
+        }
+    ],
+    "permissions": [
+        "tabs",
+        "http://*.roll20.net/*",
+        "https://plus.google.com/hangouts/*"
+    ],
+    "browser_action": {
+        "default_icon": "img/icon.png",
+        "default_popup": "index.html"
+    }
+}
