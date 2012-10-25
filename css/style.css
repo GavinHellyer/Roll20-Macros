@@ -1,0 +1,85 @@
+/* 
+ * CSS Loaders
+ */
+.bowl-ring-small {
+    display: inline-block;
+    position: absolute;
+    margin-top: 5px;
+    margin-left: 5px;
+    border: 3px solid #000000;
+    -webkit-border-radius: 12px;
+    width: 12px;
+    height: 12px;
+}
+
+.ball-holder-small {
+    -webkit-animation-name: ballMove;
+    -webkit-animation-duration: 1.6s;
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    width: 12px;
+    height: 12px;
+}
+
+.ball-small {
+    position: absolute;
+    left: 0px;
+    top: -5px;
+    background: #046EFB;
+    -webkit-border-radius: 8px;
+    width: 8px;
+    height: 8px;
+}
+
+@-webkit-keyframes ballMove {
+    0% {
+        -webkit-transform:rotate(0deg)
+    }
+    100% {
+        -webkit-transform:rotate(360deg)
+    }
+}
+
+/*
+ * CSS Icons
+ */
+.success,
+.denied {
+    display: inline-block;
+    margin-top: 6px;
+    margin-left: 6px;
+}
+
+.success:before,
+.denied:before,
+.denied:after {
+    position: absolute;
+    content: "";
+}
+
+.success:before {
+    margin-left: 6px;
+    border-width: 0 4px 4px 0;
+    border-style: solid;
+    border-color: #60BA0D;
+    -webkit-transform: rotate(45deg);
+    width: 5px;
+    height:  12px;
+}
+
+.denied:before {
+    border: 3px solid #C00000;
+    background: transparent;
+    -webkit-border-radius: 16px;
+    width: 10px;
+    height: 10px;
+}
+
+.denied:after {
+    margin-top: 7px;
+    margin-left: 2px;
+    background: #C00000;
+    -webkit-transform: rotate(-45deg);
+    width: 11px;
+    height: 3px;
+}
