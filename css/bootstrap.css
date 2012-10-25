@@ -992,10 +992,6 @@ textarea,
   width: 206px;
 }
 
-textarea {
-  height: auto;
-}
-
 textarea,
 input[type="text"],
 input[type="password"],
