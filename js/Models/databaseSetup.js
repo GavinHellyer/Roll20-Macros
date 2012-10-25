@@ -9,19 +9,23 @@ define([], function() {
         /*
          * Default Class Variables
          */
-        this._version = 1.1;
+        this._version = 1.0;
         this._schema = {
-            1: {
-                0: [
-                    'CREATE TABLE macros(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, macro TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, visible BOOLEAN NOT NULL DEFAULT true);',
-                    'CREATE TABLE variables(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, variable TEXT NOT NULL);',
-                    'CREATE TABLE characters(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL);',
+            0: {
+                1: [
+                    'CREATE TABLE cms_macros(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, macro TEXT NOT NULL, sort INTEGER NOT NULL DEFAULT 0, visible BOOLEAN NOT NULL DEFAULT true);',
+                    'CREATE TABLE cms_variables(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, variable TEXT NOT NULL);',
+                    'CREATE TABLE cms_characters(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL);',
+                ],
+                2: [
+                    'CREATE TABLE link_character_macro(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, character_id INTEGER NOT NULL, macro_id INTEGER NOT NULL);'
                 ]
             }
         };
         
         // Pending migrations to run
         var migrations = [];
+        var currentMigration = 0;
         // Callbacks to run when migrations done
         var done = [];
         var state = 0;
@@ -39,26 +43,32 @@ define([], function() {
             }
             
             // Get current database version
-            var currentVersion = parseFloat(app.dbAdapter.db.version);
+            var currentVersion = parseFloat(app.dbAdapter.db.version) ? parseFloat(app.dbAdapter.db.version) : 0;
+            var freshInstall = (currentVersion) ? false : true;
             
             for (ver in this._schema) {
                 for (sub in this._schema[ver]) {
-                    var version = parseFloat(parseInt(ver) + '.' + parseInt(sub));
-                    var nextVersion = parseFloat(parseInt(ver) + '.' + (parseInt(sub) + 1));
+                    var nextVersion = parseFloat(parseInt(ver) + '.' + parseInt(sub));
                     
-                    if (currentVersion <= version && version < this._version) {
+                    if ((currentVersion < nextVersion || freshInstall) && nextVersion < this._version) {
+                        freshInstall = false;
+                        var version = (currentVersion) ? currentVersion : '';
                         var schema = this._schema[ver][sub];
                         var update = {
                             version: version,
+                            currentVersion: currentVersion,
                             nextVersion: nextVersion,
+                            schema: schema,
                             execute: function(t) {
-                                for (var i = 0; i < schema.length; i++) {
-                                    t.executeSql(schema[i]);
+                                for (var i = 0; i < this.schema.length; i++) {
+                                    t.executeSql(this.schema[i]);
                                 }
                                 
-                                console.log('Updating Database ' + app.config.db.name + ' from v' + version + ' to v' + nextVersion);
+                                console.log('Updating Database ' + app.config.db.name + ' from v' + this.currentVersion + ' to v' + this.nextVersion);
                             }
                         };
+                        
+                        currentVersion = nextVersion;
                         
                         migrations.push(update);
                     }
@@ -66,12 +76,7 @@ define([], function() {
             }
             
             state = 1;
-            try {
-                doMigration();
-            }
-            catch(e) {
-                error(e);
-            }
+            doMigration();
             
             return;
         };
@@ -94,15 +99,15 @@ define([], function() {
 
         // Execute a migration
         var doMigration = function() {
-            if (migrations[0]) {
+            if (migrations[currentMigration]) {
                 app.dbAdapter.db.transaction(function(t) {
-                    var update = migrations[0];
+                    var update = migrations[currentMigration];
                     app.dbAdapter.db.changeVersion(update.version, update.nextVersion, function(t) {
                         update.execute(t);
                     }, function (err) {
                         console.log(err.message);
                     });
-                    delete(migrations[0]);
+                    currentMigration++;
                     doMigration();
                 }, function (err) {
                     console.log(err.message);
