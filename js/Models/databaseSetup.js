@@ -26,9 +26,9 @@ define([], function() {
         var migrations = [];
         var currentMigration = 0;
         // Callbacks to run when migrations done
-        var done = [];
+        var syncDone = [];
         var state = 0;
-
+        
         /*
          * Sync the schema
          * Loops through the schema changes and
@@ -38,8 +38,9 @@ define([], function() {
          */
         this.sync = function() {
             if (state > 0) {
-                throw "Migrator is only valid once -- create a new one if you want to do another migration.";
+                notify('Migrator is only valid once -- create a new one if you want to do another migration.', 'notice');
             }
+            state = 1;
             
             // Get current database version
             var currentVersion = parseFloat(app.dbAdapter.db.version) ? parseFloat(app.dbAdapter.db.version) : 0;
@@ -63,7 +64,7 @@ define([], function() {
                                     t.executeSql(this.schema[i]);
                                 }
                                 
-                                console.log('Updating Database ' + app.config.db.name + ' from v' + this.currentVersion + ' to v' + this.nextVersion);
+                                notify('Updating Database ' + app.config.db.name + ' from v' + this.currentVersion + ' to v' + this.nextVersion, 'notice');
                             }
                         };
                         
@@ -74,7 +75,6 @@ define([], function() {
                 }
             }
             
-            state = 1;
             doMigration();
             
             return;
@@ -82,20 +82,20 @@ define([], function() {
         
         // Called when the migration has completed.  If the migration has already completed,
         // executes immediately.  Otherwise, waits.
-        this.done = function(func) {
+        this.syncDone = function(func) {
             if (typeof func !== "array") {
                 func = [func];
             }
             
             for(var f in func) {
-                done.push(func[f]);
+                syncDone.push(func[f]);
             }
             
-            if (state > 1) {
-                executeDoneCallbacks();
+            if (state == 2) {
+                executeSyncDoneCallbacks();
             }
         };
-
+        
         // Execute a migration
         var doMigration = function() {
             if (migrations[currentMigration]) {
@@ -103,23 +103,28 @@ define([], function() {
                     var update = migrations[currentMigration];
                     app.dbAdapter.db.changeVersion(update.version, update.nextVersion, function(t) {
                         update.execute(t);
+                        executeSyncDoneCallbacks();
                     }, function (err) {
-                        console.log(err.message);
+                        notify(err.message, 'error');
+                        executeSyncDoneCallbacks();
                     });
                     currentMigration++;
                     doMigration();
                 }, function (err) {
-                    console.log(err.message);
+                    notify(err.message, 'error');
+                    executeSyncDoneCallbacks();
                 });
-            } else {
+            }
+            else {
                 state = 2;
-                executeDoneCallbacks();
             }
         };
-
-        var executeDoneCallbacks = function() {
-            for(var f in done) {
-                done[f]();
+        
+        var executeSyncDoneCallbacks = function() {
+            if (state == 2) {
+                for(var f in syncDone) {
+                    syncDone[f]();
+                }
             }
         }
     };
