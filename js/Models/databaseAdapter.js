@@ -344,7 +344,7 @@ define(function() {
                     tx.executeSql(app.dbAdapter._query, [], function (tx, results) {
                         app.dbAdapter._query = '';
                         app.dbAdapter._result = results;
-                        callback(true);
+                        callback(results);
                     }, function (tx, err) {
                         app.dbAdapter._query = '';
                         app.dbAdapter._error = err.message;
