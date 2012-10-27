@@ -10,21 +10,35 @@
     <body>
         <div class="container">
             <ul class="nav nav-tabs" id="myTab">
-              <li class="active"><a href="#characters" data-toggle="tab">Characters</a></li>
-              <li><a href="#settings" data-toggle="tab">Settings</a></li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#">Characters <b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="#lexx" data-toggle="tab">Lexx</a>
+                        </li>
+                        <li>
+                            <a href="#balth" data-toggle="tab">Balth</a>
+                        </li>
+                    </ul>
+                </li>
+              <li><a href="#settings" data-toggle="tab"><i class="icon-cog"></i></a></li>
             </ul>
             
             <div class="tab-content">
-                <div class="tab-pane active" id="characters">
+                <div class="tab-pane" id="lexx">
+                    <h3>Lexx Evans</h3>
                     <ul class="nav nav-pills">
-                        <li class="active"><a href="#lexx" data-toggle="pill">Lexx</a></li>
-                        <li><a href="#balth" data-toggle="pill">Balth</a></li>
+                        <li class="active"><a href="#attacks" data-toggle="pill">Attacks</a></li>
+                        <li><a href="#skills" data-toggle="pill">Skills</a></li>
+                        <li><a href="#attributes" data-toggle="pill">Attributes</a></li>
                     </ul>
                     <div class="tab-content">
-                        <div class="tab-pane active" id="lexx">Lexx</div>
-                        <div class="tab-pane" id="balth">Balth</div>
+                        <div class="tab-pane active" id="attacks">Your Attacks</div>
+                        <div class="tab-pane" id="skills">Your Skills</div>
+                        <div class="tab-pane" id="attributes">Your Attributes</div>
                     </div>
                 </div>
+                <div class="tab-pane" id="balth">Balth</div>
                 <div class="tab-pane" id="settings">4...</div>
             </div>
             

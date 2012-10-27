@@ -30,6 +30,10 @@ require(
         schema.syncDone(function() {
             notify('Database Sync Complete.', 'notice');
             $(function() {
+                $('#myTab a').click(function (e) {
+                    e.preventDefault();
+                    $(this).tab('show');
+                })
             });
         });
     }
