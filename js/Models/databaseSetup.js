@@ -18,6 +18,9 @@ define([], function() {
                     'CREATE TABLE cms_characters(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL);',
                     'CREATE TABLE link_character_macro(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, character_id INTEGER NOT NULL, macro_id INTEGER NOT NULL);',
                     'CREATE TABLE link_character_variable(id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, character_id INTEGER NOT NULL, variable_id INTEGER NOT NULL);'
+                ],
+                2: [
+                    'INSERT INTO cms_characters (name) VALUES ("Lexx Evans");'
                 ]
             }
         };
