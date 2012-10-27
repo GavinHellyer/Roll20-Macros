@@ -1,6 +1,17 @@
-/* 
- * CSS Loaders
- */
+/***************
+ * CSS Loaders *
+ ***************/
+.ajax-loader {
+    display: inline-block;
+    position: absolute;
+    margin-top: 0;
+    line-height: 1px;
+}
+
+.ajax-loader .process {
+    display: none;
+}
+
 .bowl-ring-small {
     display: inline-block;
     position: absolute;
@@ -40,12 +51,13 @@
     }
 }
 
-/*
- * CSS Icons
- */
+/*************
+ * CSS Icons *
+ *************/
 .success,
 .denied {
     display: inline-block;
+    position: absolute;
     margin-top: 6px;
     margin-left: 6px;
 }
@@ -58,7 +70,7 @@
 }
 
 .success:before {
-    margin-left: 6px;
+    margin-left: 3px;
     border-width: 0 4px 4px 0;
     border-style: solid;
     border-color: #60BA0D;
