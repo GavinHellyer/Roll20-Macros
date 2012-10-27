@@ -44,3 +44,17 @@ body {
 .btn {
     margin-left: 6px;
 }
+
+.nav-tabs > .active > a,
+.nav-tabs > .active > a:hover {
+    color: white;
+    background-color: dodgerBlue;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 10px 0;
+}
+
+.nav {
+    margin-bottom: 0px;
+}
